@@ -1,0 +1,287 @@
+:root {
+    --primary-text: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+    --ui-bg: rgba(255, 255, 255, 0.3);
+    --ui-hover: rgba(255, 255, 255, 0.5);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none; /* Prevent text selection for kids */
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    color: var(--primary-text);
+    /* Smooth transitions for background color changes */
+    transition: background-color 0.5s ease-in-out;
+    background-color: #FF6B6B; /* Default starting color */
+}
+
+/* Top Progress Bar */
+#progress-container {
+    width: 100%;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    height: auto;
+    max-height: 10vh;
+    z-index: 10;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.4);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.dot.active {
+    background-color: white;
+    transform: scale(1.5);
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+/* Main Content Area */
+main {
+    flex-grow: 1;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 90vh;
+}
+
+/* Navigation Buttons */
+.nav-btn {
+    background: var(--ui-bg);
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    z-index: 10;
+}
+
+.nav-btn:hover {
+    background: var(--ui-hover);
+    transform: scale(1.1);
+}
+
+.nav-btn:active {
+    transform: scale(0.95);
+}
+
+.nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Card Container */
+#card-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+    /* Smooth entrance animation */
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* The Letter Display */
+#letter-display {
+    font-size: min(35vh, 250px); /* Extremely large */
+    font-weight: 900;
+    line-height: 1;
+    text-shadow: 0 8px 16px var(--shadow-color);
+    margin-bottom: 20px;
+}
+
+/* Lowercase letter display alongside uppercase */
+.letter-span {
+    display: inline-block;
+}
+
+#letter-display .lowercase {
+    font-size: 0.7em;
+    margin-left: -5px;
+}
+
+/* Emoji/Illustration */
+#emoji-display {
+    font-size: min(20vh, 150px);
+    line-height: 1.2;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* Word text */
+#word-display {
+    font-size: min(8vh, 60px);
+    font-weight: 800;
+    text-shadow: 0 4px 8px var(--shadow-color);
+    text-transform: capitalize;
+    letter-spacing: 2px;
+}
+
+/* Audio Replay Button */
+#replay-btn {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ui-bg);
+    border: none;
+    border-radius: 50px;
+    padding: 15px 30px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: inherit;
+    font-weight: 800;
+    z-index: 10;
+}
+
+#replay-btn:hover {
+    background: var(--ui-hover);
+    transform: translateX(-50%) scale(1.05);
+}
+
+#replay-btn:active {
+    transform: translateX(-50%) scale(0.95);
+}
+
+/* Celebration Screen (hidden by default) */
+#celebration-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+#celebration-screen.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#celebration-title {
+    font-size: min(8vw, 50px);
+    color: #FFD700; /* Gold */
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 0 20px;
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    animation: bounceIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.1); opacity: 0; }
+    60% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.confetti {
+    position: absolute;
+    font-size: 40px;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    0% { transform: translateY(-100vh) rotate(0deg); }
+    100% { transform: translateY(100vh) rotate(360deg); }
+}
+
+#restart-btn {
+    background: #4CAF50;
+    border: none;
+    border-radius: 50px;
+    padding: 20px 40px;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 800;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    margin-top: 30px;
+    transition: all 0.2s ease;
+}
+
+#restart-btn:hover {
+    background: #45a049;
+    transform: scale(1.05);
+}
+
+#restart-btn:active {
+    transform: scale(0.95);
+}
+
+/* Media Queries for smaller devices */
+@media (max-width: 600px) {
+    #progress-container {
+        gap: 3px;
+        padding: 10px 5px;
+    }
+    .dot {
+        width: 8px;
+        height: 8px;
+    }
+    .nav-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 24px;
+    }
+    #letter-display { margin-bottom: 10px; }
+    #emoji-display { margin-bottom: 10px; }
+    main { padding: 0 10px; }
+}

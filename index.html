@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <!-- Prevent zooming to make it feel like a native app -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Belajar Alfabet Indonesia</title>
+    
+    <!-- External Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800;900&display=swap" rel="stylesheet">
+    
+    <!-- Application Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <div id="progress-container">
+        <!-- Dots injected by JS -->
+    </div>
+
+    <main id="main-area">
+        <button id="prev-btn" class="nav-btn" aria-label="Previous">◀</button>
+        
+        <div id="card-container">
+            <div id="letter-display">
+                <!-- Data injected by JS -->
+            </div>
+            <div id="emoji-display"></div>
+            <div id="word-display"></div>
+        </div>
+
+        <button id="next-btn" class="nav-btn" aria-label="Next">▶</button>
+    </main>
+
+    <button id="replay-btn" aria-label="Play Sound">
+        🔊 <span style="font-size: 20px;">Dengar</span> <!-- "Listen" in Indonesian -->
+    </button>
+
+    <div id="celebration-screen">
+        <!-- Confetti elements will be injected here -->
+        <h1 id="celebration-title">Hebat!<br>Kamu sudah hafal<br>semua huruf!</h1>
+        <button id="restart-btn">🔄 Main Lagi</button>
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

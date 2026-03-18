@@ -2,7 +2,7 @@
 const alphabetData = [
     { letter: "A", word: "Apel", emoji: "🍎" },
     { letter: "B", word: "Bola", emoji: "⚽" },
-    { letter: "C", word: "Cincin", emoji: "💍" },
+    { letter: "C", word: "Cicak", emoji: "🦎" },
     { letter: "D", word: "Domba", emoji: "🐑" },
     { letter: "E", word: "Ember", emoji: "🪣" },
     { letter: "F", word: "Foto", emoji: "📷" },

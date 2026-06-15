@@ -41,10 +41,10 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    align-items: center;
     color: var(--primary-text);
-    /* Smooth transitions for background color changes */
     transition: background-color 0.5s ease-in-out;
-    background-color: #FF6B6B; /* Default starting color */
+    background-color: #FF6B6B;
 }
 
 /* Top Progress Bar */
@@ -140,7 +140,7 @@ main {
 
 /* The Letter Display */
 #letter-display {
-    font-size: min(35vh, 250px); /* Extremely large */
+    font-size: min(35vh, 350px);
     font-weight: 900;
     line-height: 1;
     text-shadow: 0 8px 16px var(--shadow-color);
@@ -154,7 +154,7 @@ main {
 
 /* Emoji/Illustration */
 #emoji-display {
-    font-size: min(20vh, 150px);
+    font-size: min(20vh, 200px);
     line-height: 1.2;
     filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
     margin-bottom: 20px;
@@ -177,10 +177,9 @@ main {
 
 /* Audio Replay Button */
 #replay-btn {
-    position: absolute;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
+    position: relative;
+    align-self: center;
+    margin: 0 0 20px 0;
     background: var(--ui-bg);
     border: none;
     border-radius: 50px;
@@ -201,17 +200,17 @@ main {
 
 #replay-btn:hover {
     background: var(--ui-hover);
-    transform: translateX(-50%) scale(1.05);
+    transform: scale(1.05);
 }
 
 #replay-btn:active {
-    transform: translateX(-50%) scale(0.95);
+    transform: scale(0.95);
 }
 
 #replay-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    transform: translateX(-50%);
+    transform: none;
 }
 
 /* Celebration Screen (hidden by default) */
@@ -306,4 +305,45 @@ main {
     #letter-display { margin-bottom: 10px; }
     #emoji-display { margin-bottom: 10px; }
     main { padding: 0 10px; }
+}
+
+/* Tablet (iPad) breakpoint */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .nav-btn {
+        width: 70px;
+        height: 70px;
+        font-size: 32px;
+    }
+    #replay-btn {
+        font-size: 28px;
+        padding: 14px 28px;
+    }
+}
+
+/* Landscape on phones and tablets */
+@media (orientation: landscape) and (max-height: 500px) {
+    #progress-container {
+        max-height: 6vh;
+        padding: 5px;
+    }
+    .dot { width: 7px; height: 7px; }
+    #letter-display {
+        font-size: min(38vh, 150px);
+        margin-bottom: 4px;
+    }
+    #emoji-display {
+        font-size: min(25vh, 80px);
+        margin-bottom: 4px;
+    }
+    #word-display { font-size: min(6vh, 36px); }
+    #replay-btn {
+        font-size: 18px;
+        padding: 8px 18px;
+        margin-bottom: 8px;
+    }
+    .nav-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 22px;
+    }
 }

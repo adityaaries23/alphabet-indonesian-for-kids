@@ -43,6 +43,7 @@ class AlphabetApp {
             const dot = document.createElement('div');
             dot.classList.add('dot');
             if (index === 0) dot.classList.add('active');
+            dot.title = item.letter; // Show letter on hover
             
             // Allow parents to click dots to jump to specific letters
             dot.addEventListener('click', () => {
@@ -67,6 +68,7 @@ class AlphabetApp {
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft') this.navigate(-1);
             else if (e.key === 'ArrowRight') this.navigate(1);
+            else if (e.key === ' ' || e.key === 'Enter') this.playAudio();
         });
 
         // Swipe support (mobile/tablet use)
@@ -134,6 +136,7 @@ class AlphabetApp {
         
         // Update button operational states
         el.prevBtn.disabled = (this.currentIndex === 0);
+        el.nextBtn.disabled = (this.currentIndex === this.data.length - 1);
         
         // Update body background color by cycling through the theme array
         document.body.style.backgroundColor = this.colors[this.currentIndex % this.colors.length];
@@ -156,6 +159,7 @@ class AlphabetApp {
         window.speechSynthesis.cancel();
         
         const data = this.data[this.currentIndex];
+        const indexAtCall = this.currentIndex; // Capture to guard against stale closure
         
         const letterMsg = new SpeechSynthesisUtterance(data.letter);
         letterMsg.lang = 'id-ID';
@@ -165,15 +169,18 @@ class AlphabetApp {
         wordMsg.lang = 'id-ID';
         wordMsg.rate = 0.85;
         wordMsg.pitch = 1.2; // Slightly higher pitch for friendliness
+
+        // Visual feedback: disable replay button while speaking
+        this.elements.replayBtn.disabled = true;
+        wordMsg.onend = () => { this.elements.replayBtn.disabled = false; };
         
         // Start talking
         window.speechSynthesis.speak(letterMsg);
         
-        // Queue the word to be spoken after the phonetic letter with a subtle delay
+        // Queue the word after the letter — guard against stale navigation
         letterMsg.onend = () => {
-            setTimeout(() => {
-                window.speechSynthesis.speak(wordMsg);
-            }, 400); // 400ms delay between letter and word
+            if (this.currentIndex !== indexAtCall) return;
+            setTimeout(() => window.speechSynthesis.speak(wordMsg), 400);
         };
     }
 

@@ -1,0 +1,13 @@
+{
+  "name": "Belajar Alfabet Indonesia",
+  "short_name": "Alfabet",
+  "description": "Belajar huruf A-Z dalam Bahasa Indonesia",
+  "start_url": ".",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#FF6B6B",
+  "theme_color": "#FF6B6B",
+  "icons": [
+    { "src": "assets/favicon.png", "sizes": "192x192", "type": "image/png" }
+  ]
+}

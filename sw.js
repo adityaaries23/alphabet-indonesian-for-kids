@@ -1,9 +1,9 @@
 /**
  * Service worker: caches the app shell on first visit so the app works offline.
- * Bump CACHE_VERSION whenever any file in APP_SHELL changes, so returning
- * visitors pick up the new files.
+ * Online, app files always come from the network, so changes show up on the
+ * next open. Bump CACHE_VERSION when the APP_SHELL list changes.
  */
-const CACHE_VERSION = 'v6';
+const CACHE_VERSION = 'v7';
 const CACHE_NAME = `alfabet-${CACHE_VERSION}`;
 
 const APP_SHELL = [
@@ -27,7 +27,9 @@ const APP_SHELL = [
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
-            .then((cache) => cache.addAll(APP_SHELL))
+            // 'reload' skips the browser's HTTP cache, so a new version never
+            // gets filled with files left over from the previous one
+            .then((cache) => cache.addAll(APP_SHELL.map((url) => new Request(url, { cache: 'reload' }))))
             .then(() => self.skipWaiting())
     );
 });
@@ -45,26 +47,40 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Cache-first: serve from cache, fall back to the network
+// App files: network first, so a new version shows up on the next open; the
+// cache is the fallback when offline. Recorded clips: cache first.
 self.addEventListener('fetch', (event) => {
     const { request } = event;
     if (request.method !== 'GET' || new URL(request.url).origin !== self.location.origin) return;
 
-    event.respondWith(
-        caches.match(request, { ignoreSearch: true }).then((cached) => {
-            if (cached) return cached;
-            return fetch(request).then((response) => {
+    if (request.url.includes('/assets/audio/')) {
+        event.respondWith(
+            caches.match(request).then((cached) => cached || fetch(request).then((response) => {
                 // Keep recorded voice clips for offline use once they've played
-                if (response.ok && request.url.includes('/assets/audio/')) {
+                if (response.ok) {
                     const copy = response.clone();
                     caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
                 }
                 return response;
-            }).catch(() => {
+            }))
+        );
+        return;
+    }
+
+    event.respondWith(
+        fetch(request, { cache: 'no-cache' }).then((response) => {
+            if (response.ok) {
+                const copy = response.clone();
+                caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+            }
+            return response;
+        }).catch(() =>
+            caches.match(request, { ignoreSearch: true }).then((cached) => {
+                if (cached) return cached;
                 // Offline and not cached: page navigations still get the app
                 if (request.mode === 'navigate') return caches.match('./index.html');
                 return Response.error();
-            });
-        })
+            })
+        )
     );
 });

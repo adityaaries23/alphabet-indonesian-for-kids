@@ -7,6 +7,8 @@ class AlphabetApp {
         this.data = data;
         this.colors = colors;
         this.currentIndex = 0;
+        this.wordIndex = 0; // Which of the current letter's words is showing
+        this.lastWordIndex = {}; // Last word shown per letter, to avoid repeats
         this.voice = new Voice(recordedClips);
         this.started = false; // Sound stays off until the first tap (iOS rule)
         
@@ -139,10 +141,26 @@ class AlphabetApp {
     }
 
     /**
+     * Picks one of the letter's words at random, never the one shown last time
+     */
+    pickWord(index) {
+        const count = this.data[index].words.length;
+        const last = this.lastWordIndex[index];
+        let pick = Math.floor(Math.random() * count);
+        if (count > 1 && pick === last) {
+            pick = (pick + 1 + Math.floor(Math.random() * (count - 1))) % count;
+        }
+        this.lastWordIndex[index] = pick;
+        return pick;
+    }
+
+    /**
      * Renders the current state (letter, emoji, word, background) into the DOM
      */
     updateCard() {
         const currentData = this.data[this.currentIndex];
+        this.wordIndex = this.pickWord(this.currentIndex);
+        const currentWord = currentData.words[this.wordIndex];
         const el = this.elements;
         
         // Re-trigger CSS animation for the card container
@@ -155,8 +173,8 @@ class AlphabetApp {
             <span class="uppercase">${currentData.letter}</span>
             <span class="lowercase">${currentData.letter.toLowerCase()}</span>
         `;
-        el.emojiDisplay.textContent = currentData.emoji;
-        el.wordDisplay.textContent = currentData.word;
+        el.emojiDisplay.textContent = currentWord.emoji;
+        el.wordDisplay.textContent = currentWord.word;
         
         // Update button operational states
         el.prevBtn.disabled = (this.currentIndex === 0);
@@ -182,9 +200,10 @@ class AlphabetApp {
         if (!this.started) return;
         const data = this.data[this.currentIndex];
         const key = data.letter.toLowerCase();
+        const word = data.words[this.wordIndex];
         this.voice.say([
             { clip: `letter-${key}`, text: data.say },
-            { clip: `word-${key}`, text: data.word }
+            { clip: `word-${key}-${this.wordIndex + 1}`, text: word.word }
         ]);
     }
 

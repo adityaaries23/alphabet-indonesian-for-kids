@@ -7,6 +7,8 @@ class AlphabetApp {
         this.data = data;
         this.colors = colors;
         this.currentIndex = 0;
+        this.voice = new Voice(recordedClips);
+        this.started = false; // Sound stays off until the first tap (iOS rule)
         
         // DOM Elements
         this.elements = {
@@ -20,6 +22,8 @@ class AlphabetApp {
             progressContainer: document.getElementById('progress-container'),
             celebrationScreen: document.getElementById('celebration-screen'),
             restartBtn: document.getElementById('restart-btn'),
+            startScreen: document.getElementById('start-screen'),
+            startBtn: document.getElementById('start-btn'),
             mainArea: document.getElementById('main-area')
         };
         
@@ -59,6 +63,7 @@ class AlphabetApp {
      * Wires up all UI event handlers (clicks, swipes, keyboard)
      */
     setupEventListeners() {
+        this.elements.startBtn.addEventListener('click', () => this.start());
         this.elements.prevBtn.addEventListener('click', () => this.navigate(-1));
         this.elements.nextBtn.addEventListener('click', () => this.navigate(1));
         this.elements.replayBtn.addEventListener('click', () => this.playAudio());
@@ -66,6 +71,13 @@ class AlphabetApp {
         
         // Keyboard navigation (desktop use)
         document.addEventListener('keydown', (e) => {
+            if (!this.started) {
+                if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
+                    this.start();
+                }
+                return;
+            }
             if (e.key === 'ArrowLeft') this.navigate(-1);
             else if (e.key === 'ArrowRight') this.navigate(1);
             else if (e.key === ' ' || e.key === 'Enter') this.playAudio();
@@ -83,6 +95,18 @@ class AlphabetApp {
             touchEndX = e.changedTouches[0].screenX;
             this.handleSwipe(touchStartX, touchEndX);
         }, { passive: true });
+    }
+
+    /**
+     * Hides the start screen and turns sound on. Runs from a tap, which is
+     * what iOS needs before it allows audio.
+     */
+    start() {
+        if (this.started) return;
+        this.started = true;
+        this.voice.unlock();
+        this.elements.startScreen.classList.add('hidden');
+        this.playAudio();
     }
 
     /**
@@ -152,36 +176,16 @@ class AlphabetApp {
     }
 
     /**
-     * Triggers the internal Web Speech API to syntheize the text into speech
+     * Says the letter name, then the word
      */
     playAudio() {
-        // Cancel ongoing speech to avoid text overlapping
-        window.speechSynthesis.cancel();
-        
+        if (!this.started) return;
         const data = this.data[this.currentIndex];
-        const indexAtCall = this.currentIndex; // Capture to guard against stale closure
-        
-        const letterMsg = new SpeechSynthesisUtterance(data.letter);
-        letterMsg.lang = 'id-ID';
-        letterMsg.rate = 0.8; // Talk slightly slower for kids
-        
-        const wordMsg = new SpeechSynthesisUtterance(data.word);
-        wordMsg.lang = 'id-ID';
-        wordMsg.rate = 0.85;
-        wordMsg.pitch = 1.2; // Slightly higher pitch for friendliness
-
-        // Visual feedback: disable replay button while speaking
-        this.elements.replayBtn.disabled = true;
-        wordMsg.onend = () => { this.elements.replayBtn.disabled = false; };
-        
-        // Start talking
-        window.speechSynthesis.speak(letterMsg);
-        
-        // Queue the word after the letter — guard against stale navigation
-        letterMsg.onend = () => {
-            if (this.currentIndex !== indexAtCall) return;
-            setTimeout(() => window.speechSynthesis.speak(wordMsg), 400);
-        };
+        const key = data.letter.toLowerCase();
+        this.voice.say([
+            { clip: `letter-${key}`, text: data.say },
+            { clip: `word-${key}`, text: data.word }
+        ]);
     }
 
     /**
@@ -208,12 +212,7 @@ class AlphabetApp {
         }
         
         // Play congratulatory Indonesian message
-        window.speechSynthesis.cancel();
-        const congratsMsg = new SpeechSynthesisUtterance("Hebat! Kamu sudah hafal semua huruf!");
-        congratsMsg.lang = 'id-ID';
-        congratsMsg.rate = 0.9;
-        congratsMsg.pitch = 1.2;
-        window.speechSynthesis.speak(congratsMsg);
+        this.voice.say([{ clip: 'hebat', text: 'Hebat! Kamu sudah hafal semua huruf!' }]);
     }
 
     /**

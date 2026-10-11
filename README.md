@@ -4,7 +4,7 @@ A fun, fast, and visually engaging web application designed to help children (sp
 
 ## Features ✨
 - **Full Alphabet A-Z**: Displays the uppercase letter, lowercase letter, a representative word, and a large emoji.
-- **Native Audio**: Uses the Web Speech API (`SpeechSynthesis`) to pronounce the phonetic letter sound and the word in Indonesian. No audio files needed!
+- **Voice-over**: Says the Indonesian letter name, then the word. Recorded clips in `assets/audio/` are used when present (see `assets/audio/README.md`); everything else is spoken by the device's Indonesian voice (Web Speech API).
 - **Interactive Navigation**: 
   - Swipe left/right on touch devices (Mobile & Tablet)
   - Left/Right arrow keys on computers
@@ -16,12 +16,14 @@ A fun, fast, and visually engaging web application designed to help children (sp
 Because the application uses zero external frameworks, dependencies, or servers, running it is incredibly simple:
 
 1. Double-click the `index.html` file to open it in your web browser (Chrome, Safari, Firefox, or Edge).
-2. *Note on Audio*: Browsers prevent websites from playing audio automatically until the user interacts with the page. Tap anywhere on the screen, use the arrow buttons, or tap the "🔊 Dengar" (Listen) button to start the audio engine.
+2. Tap **Mulai** to start. Browsers (iOS Safari especially) only allow sound after a tap, so the start button is what turns the voice on.
+3. *iPhone/iPad*: the device voice needs the Indonesian voice (Damayanti), found under Settings > Accessibility > Spoken Content > Voices > Indonesian. Recorded clips don't need it.
 
 ## Code Structure 📂
 The project has been refactored into clean, maintainable modules:
 - `index.html`: The core HTML structure of the app.
 - `css/styles.css`: All visual styling, responsive design, and CSS animations.
 - `js/data.js`: The dictionary containing the A-Z data (letters, words, emojis) and the background colors. Edit this file to change words or emojis!
+- `js/voice.js`: The voice-over: plays recorded clips, falling back to the device's Indonesian voice.
 - `js/app.js`: The central logic, built as a modern JavaScript class (`AlphabetApp`), handling navigation, audio synthesis, and the celebration overlay.
 - `sw.js`: The service worker that caches the app for offline use. Bump `CACHE_VERSION` after changing any app file so visitors get the update.

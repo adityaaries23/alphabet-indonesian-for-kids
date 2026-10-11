@@ -108,9 +108,12 @@ main {
     z-index: 10;
 }
 
-.nav-btn:hover {
-    background: var(--ui-hover);
-    transform: scale(1.1);
+/* Only on devices with a real pointer: on iPhone/iPad a tap would leave the hover style stuck */
+@media (hover: hover) {
+    .nav-btn:hover {
+        background: var(--ui-hover);
+        transform: scale(1.1);
+    }
 }
 
 .nav-btn:active {
@@ -209,9 +212,11 @@ main {
     z-index: 10;
 }
 
-#replay-btn:hover {
-    background: var(--ui-hover);
-    transform: scale(1.05);
+@media (hover: hover) {
+    #replay-btn:hover {
+        background: var(--ui-hover);
+        transform: scale(1.05);
+    }
 }
 
 #replay-btn:active {
@@ -289,9 +294,11 @@ main {
     transition: all 0.2s ease;
 }
 
-#restart-btn:hover {
-    background: #45a049;
-    transform: scale(1.05);
+@media (hover: hover) {
+    #restart-btn:hover {
+        background: #45a049;
+        transform: scale(1.05);
+    }
 }
 
 #restart-btn:active {

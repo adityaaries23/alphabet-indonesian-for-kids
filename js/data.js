@@ -23,7 +23,7 @@ const alphabetData = [
         { word: "Flamingo", emoji: "🦩" }, { word: "Foto", emoji: "📸" }, { word: "Feri", emoji: "⛴️" },
         { word: "Fajar", emoji: "🌅" }, { word: "Film", emoji: "🎬" }] },
     { letter: "G", say: "ge", words: [
-        { word: "Gajah", emoji: "🐘" }, { word: "Gitar", emoji: "🎸" }, { word: "Gurita", emoji: "🐙" },
+        { word: "Gajah", emoji: "🐘" }, { word: "Gorila", emoji: "🦍" }, { word: "Gurita", emoji: "🐙" },
         { word: "Gigi", emoji: "🦷" }, { word: "Gelas", emoji: "🥛" }] },
     { letter: "H", say: "ha", words: [
         { word: "Harimau", emoji: "🐯" }, { word: "Helikopter", emoji: "🚁" }, { word: "Hujan", emoji: "🌧️" },

@@ -3,7 +3,7 @@
  * Bump CACHE_VERSION whenever any file in APP_SHELL changes, so returning
  * visitors pick up the new files.
  */
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHE_NAME = `alfabet-${CACHE_VERSION}`;
 
 const APP_SHELL = [
@@ -14,6 +14,11 @@ const APP_SHELL = [
     './js/data.js',
     './js/app.js',
     './assets/favicon.png',
+    './assets/icons/apple-touch-icon.png',
+    './assets/icons/icon-192.png',
+    './assets/icons/icon-512.png',
+    './assets/icons/icon-maskable-192.png',
+    './assets/icons/icon-maskable-512.png',
     './assets/fonts/nunito-latin.woff2',
     './assets/fonts/nunito-latin-ext.woff2'
 ];

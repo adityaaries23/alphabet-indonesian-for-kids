@@ -3,7 +3,7 @@
  * Bump CACHE_VERSION whenever any file in APP_SHELL changes, so returning
  * visitors pick up the new files.
  */
-const CACHE_VERSION = 'v3';
+const CACHE_VERSION = 'v4';
 const CACHE_NAME = `alfabet-${CACHE_VERSION}`;
 
 const APP_SHELL = [
@@ -12,6 +12,7 @@ const APP_SHELL = [
     './manifest.json',
     './css/styles.css',
     './js/data.js',
+    './js/voice.js',
     './js/app.js',
     './assets/favicon.png',
     './assets/icons/apple-touch-icon.png',
@@ -52,7 +53,14 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(request, { ignoreSearch: true }).then((cached) => {
             if (cached) return cached;
-            return fetch(request).catch(() => {
+            return fetch(request).then((response) => {
+                // Keep recorded voice clips for offline use once they've played
+                if (response.ok && request.url.includes('/assets/audio/')) {
+                    const copy = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+                }
+                return response;
+            }).catch(() => {
                 // Offline and not cached: page navigations still get the app
                 if (request.mode === 'navigate') return caches.match('./index.html');
                 return Response.error();

@@ -29,7 +29,7 @@
     padding: 0;
 }
 
-.nav-btn, #replay-btn, .dot, #restart-btn, #celebration-screen {
+.nav-btn, #replay-btn, .dot, #restart-btn, #celebration-screen, #start-btn {
     user-select: none; /* Prevent text selection on interactive elements */
     -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
 }
@@ -223,10 +223,40 @@ main {
     transform: scale(0.95);
 }
 
-#replay-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
+/* Start Screen (shown until the first tap turns sound on) */
+#start-screen {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+    transition: opacity 0.3s ease;
+}
+
+#start-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#start-btn {
+    background: #4CAF50;
+    border: none;
+    border-radius: 60px;
+    padding: 28px 56px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 800;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    animation: bounceIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.2s ease;
+}
+
+#start-btn:active {
+    transform: scale(0.95);
 }
 
 /* Celebration Screen (hidden by default) */

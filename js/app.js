@@ -231,6 +231,11 @@ class AlphabetApp {
     }
 }
 
+// Belt and braces for the CSS rules: no long-press menu, text selection or dragging anywhere
+['contextmenu', 'selectstart', 'dragstart'].forEach(type => {
+    document.addEventListener(type, e => e.preventDefault());
+});
+
 // Instantiate App when the Document completely loads
 document.addEventListener('DOMContentLoaded', () => {
     // Utilize the variables from data.js

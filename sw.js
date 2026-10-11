@@ -3,7 +3,7 @@
  * Bump CACHE_VERSION whenever any file in APP_SHELL changes, so returning
  * visitors pick up the new files.
  */
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const CACHE_NAME = `alfabet-${CACHE_VERSION}`;
 
 const APP_SHELL = [

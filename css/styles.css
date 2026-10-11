@@ -37,7 +37,8 @@
 body {
     font-family: 'Nunito', sans-serif;
     height: 100vh;
-    width: 100vw;
+    height: 100dvh; /* Fit the visible area when the phone's browser bars are shown */
+    width: 100%;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -56,7 +57,7 @@ body {
     gap: 5px;
     flex-wrap: wrap;
     height: auto;
-    max-height: 10vh;
+    flex-shrink: 0;
     z-index: 10;
 }
 
@@ -82,8 +83,9 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+    min-height: 0; /* Let main shrink so the replay button stays on screen */
     padding: 0 20px;
-    height: 90vh;
 }
 
 /* Navigation Buttons */
@@ -102,12 +104,16 @@ main {
     backdrop-filter: blur(5px);
     transition: all 0.2s ease;
     box-shadow: 0 4px 8px var(--shadow-color);
+    flex-shrink: 0; /* Keep buttons round on narrow screens */
     z-index: 10;
 }
 
-.nav-btn:hover {
-    background: var(--ui-hover);
-    transform: scale(1.1);
+/* Only on devices with a real pointer: on iPhone/iPad a tap would leave the hover style stuck */
+@media (hover: hover) {
+    .nav-btn:hover {
+        background: var(--ui-hover);
+        transform: scale(1.1);
+    }
 }
 
 .nav-btn:active {
@@ -128,6 +134,7 @@ main {
     justify-content: center;
     align-items: center;
     text-align: center;
+    min-width: 0;
     height: 100%;
     /* Smooth entrance animation */
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -140,21 +147,26 @@ main {
 
 /* The Letter Display */
 #letter-display {
-    font-size: min(35vh, 350px);
+    /* Sized by both height and width so "Aa" stays on one line on phones */
+    font-size: min(30vh, calc(50vw - 100px), 350px);
+    font-size: min(30dvh, calc(50vw - 100px), 350px);
+    white-space: nowrap;
     font-weight: 900;
     line-height: 1;
     text-shadow: 0 8px 16px var(--shadow-color);
     margin-bottom: 20px;
 }
 
-/* Lowercase letter display alongside uppercase */#letter-display .lowercase {
+/* Lowercase letter display alongside uppercase */
+#letter-display .lowercase {
     font-size: 0.7em;
     margin-left: -5px;
 }
 
 /* Emoji/Illustration */
 #emoji-display {
-    font-size: min(20vh, 200px);
+    font-size: min(18vh, 40vw, 200px);
+    font-size: min(18dvh, 40vw, 200px);
     line-height: 1.2;
     filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
     margin-bottom: 20px;
@@ -168,7 +180,8 @@ main {
 
 /* Word text */
 #word-display {
-    font-size: min(8vh, 60px);
+    font-size: min(7vh, 11vw, 60px);
+    font-size: min(7dvh, 11vw, 60px);
     font-weight: 800;
     text-shadow: 0 4px 8px var(--shadow-color);
     text-transform: capitalize;
@@ -195,12 +208,15 @@ main {
     gap: 10px;
     font-family: inherit;
     font-weight: 800;
+    flex-shrink: 0;
     z-index: 10;
 }
 
-#replay-btn:hover {
-    background: var(--ui-hover);
-    transform: scale(1.05);
+@media (hover: hover) {
+    #replay-btn:hover {
+        background: var(--ui-hover);
+        transform: scale(1.05);
+    }
 }
 
 #replay-btn:active {
@@ -218,8 +234,8 @@ main {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.85);
     display: flex;
     flex-direction: column;
@@ -278,9 +294,11 @@ main {
     transition: all 0.2s ease;
 }
 
-#restart-btn:hover {
-    background: #45a049;
-    transform: scale(1.05);
+@media (hover: hover) {
+    #restart-btn:hover {
+        background: #45a049;
+        transform: scale(1.05);
+    }
 }
 
 #restart-btn:active {
@@ -302,9 +320,18 @@ main {
         height: 45px;
         font-size: 24px;
     }
-    #letter-display { margin-bottom: 10px; }
+    #letter-display {
+        /* Wide pairs like "Ww" are about 2em wide; leave room for the nav buttons */
+        font-size: min(30vh, calc(50vw - 60px));
+        font-size: min(30dvh, calc(50vw - 60px));
+        margin-bottom: 10px;
+    }
     #emoji-display { margin-bottom: 10px; }
     main { padding: 0 10px; }
+    #replay-btn {
+        font-size: 24px;
+        padding: 12px 24px;
+    }
 }
 
 /* Tablet (iPad) breakpoint */
